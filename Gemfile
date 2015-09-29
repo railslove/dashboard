@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
+if ENV['CUSTOM_RUBY_VERSION']
+ruby ENV['CUSTOM_RUBY_VERSION']
+end
+
 gem 'dashing'
 
 ## Remove this if you don't need a twitter widget.
