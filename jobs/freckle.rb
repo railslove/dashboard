@@ -16,7 +16,7 @@ connection = Faraday.new('https://api.letsfreckle.com', ssl: {version: :TLSv1}) 
 end
 
 
-SCHEDULER.every '1h', first_in: 0 do |job|
+SCHEDULER.every '15min', first_in: 0 do |job|
   response = connection.get("/v2/entries", {billable: true, from: Date.today, to: Date.tomorrow}).body
 
   count = response.reduce(0) {|a,e| a += e["minutes"] } / 60.0
