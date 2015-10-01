@@ -9,7 +9,7 @@ SCHEDULER.every '180m', first_in: 0 do
   cals = Icalendar.parse(cal_file)
   cal  = cals.first
 
-  events = cal.events.select{|e| e.dtstart < Time.now.beginning_of_day && e.dtend > Time.now.end_of_day }.map{|e| { value: e.summary.force_encoding("UTF-8").split(" ",2)[0] } }
+  events = cal.events.select{|e| (e.dtstart..e.dtend).cover? Icalendar::Values::Date.new(Date.today) }.map{|e| { value: e.summary.force_encoding("UTF-8").split(" ",2)[0] } }
 
   send_event('leaves', { items: events })
 
