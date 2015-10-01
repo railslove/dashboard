@@ -11,17 +11,16 @@ connection = Faraday.new('https://railslove.salesking.eu', ssl: {version: :TLSv1
   conn.adapter :excon
 end
 
-current_valuation = 0
-
 SCHEDULER.every '1h', first_in: 0 do |job|
-  last_valuation = current_valuation
-
-  response = connection.get("/api/invoices?filter[status]=overdue,open&fields[]=net_total").body
+  response = connection.get("/api/invoices?filter[status]=overdue,open&fields[]=net_total&fields[]=created_at").body
 
   if invoices = response["invoices"]
-    current_valuation = invoices.reduce(0) {|a,i| a += i["invoice"]["net_total"] }
 
-    send_event('salesking', { current: current_valuation })
+    sum = invoices.select{|i|
+     Time.parse(i["invoice"]["created_at"]) > Time.parse("2015-05-01")
+    }.reduce(0) {|a,i| a += i["invoice"]["net_total"] }
+
+    send_event('salesking', { current: sum })
   else
     send_event('salesking', { current: 0 })
   end
