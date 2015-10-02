@@ -1,0 +1,11 @@
+<h1 class="title" data-bind="title"></h1>
+
+<ul class='widget-people'>
+  <li data-foreach-item="people">
+    <a data-bind-href="item.url">
+      <img class="gravatar" data-bind-src="item.gravatar" data-bind-alt="item.name" data-bind-title="item.name"></img>
+    </a>
+  </li>
+</ul>
+
+<p class="updated-at" data-bind="updatedAtMessage"></p>
