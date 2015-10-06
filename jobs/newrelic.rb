@@ -17,7 +17,7 @@ SCHEDULER.every '15s' do |job|
   response = connection.get("https://api.newrelic.com/v2/servers.json").body
 
   if servers = response["servers"]
-    count = servers.count{|server| server["health_status"]!="green" }
+    count = servers.count{|server| (server["health_status"] != "green" && server["health_status"] != "orange") }
 
     send_event('servers', { text: count })
   else
