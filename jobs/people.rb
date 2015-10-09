@@ -23,7 +23,7 @@ SCHEDULER.every '180m', first_in: 0 do |job|
   response = connection.get("/api/people").body
   response = response.map do |obj|
     obj.merge!({
-      gravatar: "http://www.gravatar.com/avatar/" + Digest::MD5.new.hexdigest(obj['email'].downcase),
+      gravatar: "https://www.gravatar.com/avatar/" + Digest::MD5.new.hexdigest(obj['email'].downcase),
       url: "https://www.railslove.com/#{obj['slug']}",
       vacation: vacation_people.include?(obj['name'])
     })
