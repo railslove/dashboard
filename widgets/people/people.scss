@@ -14,13 +14,14 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);
 .widget-people {
 
   vertical-align: top;
+  margin: 0;
 
   .title {
     color: $title-color;
   }
 
   ol, ul {
-    margin: 0 15px;
+    margin: 0;
     text-align: left;
     color: $label-color;
   }
@@ -29,12 +30,7 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);
     list-style-position: inside;
   }
 
-  ul {
-    margin-bottom: 20px;
-  }
-
   li {
-    margin-bottom: 5px;
     display: inline-block;
 
   }
@@ -64,7 +60,10 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);
 
   .gravatar {
     border-radius: 20%;
-    margin: 10px;
+    margin: 5px;
+    &[vacation="true"]{
+      opacity: 0.3
+    }
   }
 
 }
