@@ -1,6 +1,5 @@
 require 'faraday'
 require 'faraday_middleware'
-require 'byebug'
 require "open-uri"
 require "icalendar"
 
