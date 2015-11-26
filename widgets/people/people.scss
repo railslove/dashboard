@@ -59,6 +59,8 @@ $moreinfo-color:    rgba(255, 255, 255, 0.7);
   }
 
   .gravatar {
+    width: 70px;
+    height: 70px;
     overflow: hidden;
     position: relative;
     &[vacation="true"]{

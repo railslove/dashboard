@@ -12,6 +12,10 @@ $meter-background:  darken($background-color, 15%);
 // ----------------------------------------------------------------------------
 .widget-meter {
 
+  h1 {
+    font-size: 22px;
+  }
+
   background-color: $background-color;
 
   input.meter {
