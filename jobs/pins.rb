@@ -1,5 +1,6 @@
 require 'faraday'
 require 'faraday_middleware'
+require 'time'
 
 module Connection
   def key
@@ -43,8 +44,8 @@ class Pin
       {
         avatar: member[:avatar],
         user: member[:name],
-        text: pin['message']['text'],
-        ts: pin['message']['ts']
+        text: truncated_text(pin['message']['text']),
+        ts: Time.at(pin['message']['ts'].to_f).to_date.to_s,
       }
     end
   end
@@ -52,13 +53,25 @@ class Pin
   def self.first
     all.first
   end
+
+  def self.last(n)
+    all[0...n] || first
+  end
+
+  private
+
+  def self.truncated_text(text, length = 90)
+    if text.length > length
+      "#{text[0...length]}..."
+    else
+      text
+    end
+  end
 end
 
 SCHEDULER.every '1m', first_in: 0 do |job|
-  puts "asdsad"
-
-  if (pin = Pin.first)
-    send_event('pins', pin)
+  if (pins = Pin.last(2))
+    send_event('pins', { pins: pins })
   else
     send_event('pins', {
       avatar: "https://lh3.googleusercontent.com/-b7qeL2Ie7qw/VjJ6MUU-hOI/AAAAAAAAAAA/c2O4wAKDvM0/w192-h192-n/event_theme.jpg",

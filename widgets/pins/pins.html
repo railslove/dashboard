@@ -1,5 +1,8 @@
-<span>
-<img width="50%" data-bind-src="avatar" data-bind-alt="name"></img>
-<br>
-<p data-bind="text"></p>
-</span>
+<ul>
+  <li class='pin' data-foreach-item="pins">
+    <img class='pin-img' data-bind-src="item.avatar" data-bind-alt="name"></img>
+    <div class='pin-body'>
+      <p class='pin-text' data-bind="item.text"></p>
+    </div>
+  </li>
+</ul>
