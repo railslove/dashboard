@@ -1,0 +1,11 @@
+language: ruby
+rvm:
+- 2.2.3
+script: date
+deploy:
+  provider: heroku
+  api_key:
+    secure: PAivW/BbpowpjwIpCkD8sXzIFiPUwril0PXA+qIdnSYKjA1o7GzvuM4Dj0WbadGEX0TGQ3qSCB+p9MnYBp0S9KcLizcEJ5MGROWXE6gWie+72jh06tP0RVhxJnAAyJp+Cl1j4tBp8ivHanEsjrgfSbSKh6ScmxBPMcZ2M5IfsPos0xT4ZQvE2y1ahmNwxlemCcjN0RpRyNacSwkCk1R/KGhDAWyYO4IMNHSsTzr1HUMYEzSb45PNBdX3I99IHiHRdrFrFcDWA4NXjxQPDAlag84yuhMUlf0lfcdGV7Se0FXSBXENNx+Atafn3uXZafxgrpKKDs74kvEBK1Q2HWIKBL92JHilq25CrrKljkoUB5uv9GI/AnpZ+Q/CQuosBo4iPECMTiENDjxqzQRLO+gPEKACMZfKIDgLq1aHtflS0yJfR6WlG3QFuWpzwzmBMXQpFrSf+0Kf7pJ2P6orYDmlz4fuzGApcTUkxgpE7RkrNx6E5pKH/her+m7oIfj6ABk/RM2g95+fk+RbjcwoisNSiEHgR1Ay/a5TEZfAuTqUlm+oFEE0WvWp3jDo+n0aqpfoa1UD8O2gy4q30PO3C6O44hHS/TMLH0Q9OI+KRR3YOx0FTVBs0yfxX/Ze7eaWFfiUoJox3FD4lKlJViw4ydZlLqV3UArV6mwcufTLcmyf6ik=
+  app: railslove-kiosk
+  on:
+    repo: railslove/dashboard
