@@ -15,4 +15,7 @@ map Sinatra::Application.assets_prefix do
   run Sinatra::Application.sprockets
 end
 
+use Rack::Auth::Basic, "Dashing" do |username, password|
+  username == ENV["USERNAME"].to_s
+end
 run Sinatra::Application
