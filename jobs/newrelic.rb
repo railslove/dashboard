@@ -17,11 +17,11 @@ SCHEDULER.every '15s' do |job|
   response = connection.get("https://api.newrelic.com/v2/servers.json").body
 
   if servers = response["servers"]
-    count = servers.count{|server| (server["health_status"] != "green" && server["health_status"] != "orange") }
+    down = servers.select{|server| (server["health_status"] != "green" && server["health_status"] != "orange") }
 
-    send_event('servers', { text: count })
+    send_event('servers', { count: down.size, names: down.map{|s| s["name"]}.join(", ") })
   else
-    send_event('servers', { text: "n/a" })
+    send_event('servers', { count: 0, names: "n/a" })
   end
 
 end
