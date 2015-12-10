@@ -1,27 +1,31 @@
-require 'net/http'
+require 'faraday'
+require 'faraday_middleware'
 require 'json'
 
-placeholder = '/nyancat.gif'
-subreddits = {
-  'puppy'   => '/r/puppygifs/hot.json?limit=100',
-  'dog_gif' => '/r/doggifs/hot.json?limit=100',
-  'pug_gif' => '/r/Puggifs/hot.json?limit=100',
-}
+subreddits = [
+  '/r/puppygifs/hot.json?limit=50',
+  '/r/doggifs/hot.json?limit=50',
+  '/r/Puggifs/hot.json?limit=50',
+]
 
-SCHEDULER.every '20s', first_in: 0 do |job|
-  subreddits.each do |_, subreddit|
-    http = Net::HTTP.new('www.reddit.com')
-    response = http.request(Net::HTTP::Get.new(subreddit))
-    json = JSON.parse(response.body)
+connection = Faraday.new('http://www.reddit.com') do |conn|
+  conn.response :json
+  conn.request :json
+  conn.adapter :excon
+end
 
-    if json['data']['children'].none?
-      send_event('reddit', image: "background-image:url(#{placeholder})")
-    else
-      urls = json['data']['children'].map{|child| child['data']['url'] }
+SCHEDULER.every '30s', first_in: 0 do |job|
+  response = connection.get(subreddits.sample)
 
-      # Ensure we're linking directly to an image, not a gallery etc.
-      valid_urls = urls.select{|url| url.downcase.end_with?('png', 'gif', 'jpg', 'jpeg')}
-      send_event('reddit', image: "background-image:url(#{valid_urls.sample(1).first})")
-    end
+  gif = if response.success?
+    urls = response.body['data']['children'].map do |child|
+      child['data']['url'] if child['data']['url'].downcase.end_with?('gif')
+    end.compact
+
+    urls.shuffle!.sample
+  else
+    '/nyancat.gif'
   end
+
+  send_event('reddit', image: "background-image:url(#{gif}); background-size: 100% 100%")
 end
