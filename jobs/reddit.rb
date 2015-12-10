@@ -3,7 +3,9 @@ require 'json'
 
 placeholder = '/nyancat.gif'
 subreddits = {
-  'pug_gif' => '/r/Puggifs/hot.json?limit=100'
+  'puppy'   => '/r/puppygifs/hot.json?limit=100',
+  'dog_gif' => '/r/doggifs/hot.json?limit=100',
+  'pug_gif' => '/r/Puggifs/hot.json?limit=100',
 }
 
 SCHEDULER.every '20s', first_in: 0 do |job|
