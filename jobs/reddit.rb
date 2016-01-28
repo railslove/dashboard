@@ -10,6 +10,7 @@ def subreddits
     '/r/Puggifs/hot.json?limit=50',
     '/r/catgifs/hot.json?limit=50',
     '/r/combinedgifs/hot.json?limit=50',
+    '/r/awwgifs/hot.json?limit=50',
   ]
 end
 
@@ -31,9 +32,13 @@ def gif_url
     end.compact
 
     urls.shuffle.each do |url|
-      if Net::HTTP.get_response(URI(url)).is_a?(Net::HTTPSuccess)
-        next_gif_url = url 
-        break
+      begin
+          if Net::HTTP.get_response(URI(url)).is_a?(Net::HTTPSuccess)
+            next_gif_url = url 
+            break
+          end
+      rescue Exception
+          next
       end
     end
   end
@@ -41,6 +46,6 @@ def gif_url
   next_gif_url
 end
 
-SCHEDULER.every '10s', first_in: 0 do |job|
+SCHEDULER.every '30s', first_in: 0 do |job|
   send_event('reddit', image: "background-image:url(#{gif_url}); background-size: 100% 100%")
 end
