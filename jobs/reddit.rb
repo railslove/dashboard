@@ -1,31 +1,46 @@
 require 'faraday'
 require 'faraday_middleware'
 require 'json'
+require 'net/http'
 
-subreddits = [
-  '/r/puppygifs/hot.json?limit=50',
-  '/r/doggifs/hot.json?limit=50',
-  '/r/Puggifs/hot.json?limit=50',
-]
-
-connection = Faraday.new('http://www.reddit.com') do |conn|
-  conn.response :json
-  conn.request :json
-  conn.adapter :excon
+def subreddits
+  [
+    '/r/puppygifs/hot.json?limit=50',
+    '/r/doggifs/hot.json?limit=50',
+    '/r/Puggifs/hot.json?limit=50',
+    '/r/catgifs/hot.json?limit=50',
+    '/r/combinedgifs/hot.json?limit=50',
+  ]
 end
 
-SCHEDULER.every '30s', first_in: 0 do |job|
-  response = connection.get(subreddits.sample)
+def connection 
+  Faraday.new('http://www.reddit.com') do |conn|
+    conn.response :json
+    conn.request :json
+    conn.adapter :excon
+  end
+end
 
-  gif = if response.success?
+def gif_url
+  response = connection.get(subreddits.sample)
+  next_gif_url = '/nyancat.gif'
+
+  if response.success?
     urls = response.body['data']['children'].map do |child|
       child['data']['url'] if child['data']['url'].downcase.end_with?('gif')
     end.compact
 
-    urls.shuffle!.sample
-  else
-    '/nyancat.gif'
+    urls.shuffle.each do |url|
+      if Net::HTTP.get_response(URI(url)).is_a?(Net::HTTPSuccess)
+        next_gif_url = url 
+        break
+      end
+    end
   end
 
-  send_event('reddit', image: "background-image:url(#{gif}); background-size: 100% 100%")
+  next_gif_url
+end
+
+SCHEDULER.every '10s', first_in: 0 do |job|
+  send_event('reddit', image: "background-image:url(#{gif_url}); background-size: 100% 100%")
 end
