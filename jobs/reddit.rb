@@ -1,7 +1,6 @@
 require 'faraday'
 require 'faraday_middleware'
 require 'json'
-require 'net/http'
 
 def subreddits
   [
@@ -33,7 +32,7 @@ def gif_url
 
     urls.shuffle.each do |url|
       begin
-          if Net::HTTP.get_response(URI(url)).is_a?(Net::HTTPSuccess)
+          if Faraday.get(url).success?
             next_gif_url = url 
             break
           end
